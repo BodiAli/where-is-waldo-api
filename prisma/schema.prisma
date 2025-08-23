@@ -8,8 +8,10 @@ datasource db {
 }
 
 model Illustration {
-  id         String      @id @default(uuid())
-  Characters Character[]
+  id          String       @id @default(uuid())
+  difficulty  String       @unique
+  Characters  Character[]
+  Leaderboard Leaderboard?
 }
 
 model Character {
@@ -34,6 +36,8 @@ model User {
 }
 
 model Leaderboard {
-  id   String @id @default(uuid())
-  User User[]
+  id             String       @id @default(uuid())
+  User           User[]
+  Illustration   Illustration @relation(fields: [illustrationId], references: [id])
+  illustrationId String       @unique
 }
