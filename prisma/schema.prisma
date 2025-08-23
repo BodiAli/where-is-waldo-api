@@ -25,3 +25,15 @@ model Character {
 
   @@unique([name, illustrationId])
 }
+
+model User {
+  id            String      @id @default(uuid())
+  name          String
+  Leaderboard   Leaderboard @relation(fields: [leaderboardId], references: [id])
+  leaderboardId String
+}
+
+model Leaderboard {
+  id   String @id @default(uuid())
+  User User[]
+}
