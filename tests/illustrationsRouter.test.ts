@@ -9,55 +9,59 @@ const app = express();
 app.use("/illustrations", illustrationsRouter);
 
 describe("illustrationsRouter routes", () => {
-  describe("given GET request to /illustrations", () => {
-    it("should return 200 status and all illustrations", async () => {
-      const response = await request(app).get("/illustrations").expect("Content-type", /json/).expect(200);
+  describe("get all illustrations", () => {
+    describe("given GET request to /illustrations", () => {
+      it("should return 200 status and all illustrations", async () => {
+        const response = await request(app).get("/illustrations").expect("Content-type", /json/).expect(200);
 
-      const responseBody = response.body as { illustrations: Illustration[] };
+        const responseBody = response.body as { illustrations: Illustration[] };
 
-      expect(responseBody.illustrations).toMatchObject([
-        { difficulty: "easy" },
-        { difficulty: "medium" },
-        { difficulty: "hard" },
-      ]);
+        expect(responseBody.illustrations).toMatchObject([
+          { difficulty: "easy" },
+          { difficulty: "medium" },
+          { difficulty: "hard" },
+        ]);
+      });
     });
   });
 
-  describe("given GET request to /illustrations/:illustrationId", async () => {
-    const mediumIllustration = await prisma.illustration.findUnique({
-      where: {
-        difficulty: "medium",
-      },
-    });
+  describe("get a single illustration", () => {
+    describe("given GET request to /illustrations/:illustrationId", async () => {
+      const mediumIllustration = await prisma.illustration.findUnique({
+        where: {
+          difficulty: "medium",
+        },
+      });
 
-    if (!mediumIllustration) {
-      throw new Error("Medium illustration not found");
-    }
+      if (!mediumIllustration) {
+        throw new Error("Medium illustration not found");
+      }
 
-    it("should return 200 status with the requested illustration and corresponding characters", async () => {
-      const response = await request(app)
-        .get(`/illustrations/${mediumIllustration.id}`)
-        .expect("Content-type", /json/)
-        .expect(200);
+      it("should return 200 status with the requested illustration and corresponding characters", async () => {
+        const response = await request(app)
+          .get(`/illustrations/${mediumIllustration.id}`)
+          .expect("Content-type", /json/)
+          .expect(200);
 
-      const responseBody = response.body as { illustration: Illustration & { Characters: Character[] } };
-      expect(responseBody.illustration).toMatchObject({ id: mediumIllustration.id, difficulty: "medium" });
-      expect(responseBody.illustration.Characters).toMatchObject([
-        { name: "waldo" },
-        { name: "wenda" },
-        { name: "wizard" },
-      ]);
-    });
+        const responseBody = response.body as { illustration: Illustration & { Characters: Character[] } };
+        expect(responseBody.illustration).toMatchObject({ id: mediumIllustration.id, difficulty: "medium" });
+        expect(responseBody.illustration.Characters).toMatchObject([
+          { name: "waldo" },
+          { name: "wenda" },
+          { name: "wizard" },
+        ]);
+      });
 
-    it("should return 404 status with error message if illustration is not found", async () => {
-      const response = await request(app)
-        .get("/illustrations/invalidId")
-        .expect("Content-type", /json/)
-        .expect(404);
+      it("should return 404 status with error message if illustration is not found", async () => {
+        const response = await request(app)
+          .get("/illustrations/invalidId")
+          .expect("Content-type", /json/)
+          .expect(404);
 
-      const responseBody = response.body as { error: string };
+        const responseBody = response.body as { error: string };
 
-      expect(responseBody.error).toBe("Illustration not found");
+        expect(responseBody.error).toBe("Illustration not found");
+      });
     });
   });
 });
