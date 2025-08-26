@@ -46,9 +46,9 @@ describe("illustrationsRouter routes", () => {
         const responseBody = response.body as { illustration: Illustration & { Characters: Character[] } };
         expect(responseBody.illustration).toMatchObject({ id: mediumIllustration.id, difficulty: "medium" });
         expect(responseBody.illustration.Characters).toMatchObject([
-          { name: "waldo" },
-          { name: "wenda" },
-          { name: "wizard" },
+          { name: "Waldo" },
+          { name: "Wenda" },
+          { name: "Wizard" },
         ]);
       });
 
