@@ -26,7 +26,7 @@ async function main() {
   });
   await prisma.character.create({
     data: {
-      name: "waldo",
+      name: "Waldo",
       xStart: WALDO_MEDIUM.xStart,
       yStart: WALDO_MEDIUM.yStart,
       xEnd: WALDO_MEDIUM.xEnd,
@@ -40,7 +40,7 @@ async function main() {
   });
   await prisma.character.create({
     data: {
-      name: "wenda",
+      name: "Wenda",
       xStart: WENDA_MEDIUM.xStart,
       yStart: WENDA_MEDIUM.yStart,
       xEnd: WENDA_MEDIUM.xEnd,
@@ -54,7 +54,7 @@ async function main() {
   });
   await prisma.character.create({
     data: {
-      name: "wizard",
+      name: "Wizard",
       xStart: WIZARD_MEDIUM.xStart,
       yStart: WIZARD_MEDIUM.yStart,
       xEnd: WIZARD_MEDIUM.xEnd,
