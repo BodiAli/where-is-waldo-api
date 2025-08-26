@@ -1,8 +1,5 @@
 import prisma from "../prisma/prismaClient.js";
-
-const WALDO_MEDIUM = { xStart: 856, xEnd: 912, yStart: 922, yEnd: 1028 } as const;
-const WENDA_MEDIUM = { xStart: 875, xEnd: 901, yStart: 741, yEnd: 792 } as const;
-const WIZARD_MEDIUM = { xStart: 1325, xEnd: 1374, yStart: 964, yEnd: 997 } as const;
+import { WALDO_MEDIUM, WENDA_MEDIUM, WIZARD_MEDIUM } from "../types/characterTypes.js";
 
 async function main() {
   await prisma.illustration.createMany({
