@@ -12,5 +12,6 @@ declare namespace NodeJS {
     WIZARD_MEDIUM_X_END: string;
     WIZARD_MEDIUM_Y_START: string;
     WIZARD_MEDIUM_Y_END: string;
+    SESSION_SECRET: string;
   }
 }
