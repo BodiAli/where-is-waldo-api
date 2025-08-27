@@ -1,14 +1,28 @@
 import "dotenv/config";
+import cors from "cors";
 import express, { type Request, type Response, type NextFunction } from "express";
+import session from "express-session";
 import illustrationsRouter from "./routes/illustrationsRouter.js";
-import validateCharacterRouter from "./routes/validateCharacterRouter.js";
 
 const app = express();
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: true },
+  })
+);
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:5173",
+  })
+);
 app.use(express.json());
 
 app.use("/illustrations", illustrationsRouter);
-app.use("/validate", validateCharacterRouter);
 
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Resource not found" });
