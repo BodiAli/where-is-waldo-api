@@ -6,12 +6,15 @@ async function main() {
     data: [
       {
         difficulty: "easy",
+        imageId: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318885/where-is-waldo2_f4wjsb.jpg",
       },
       {
         difficulty: "medium",
+        imageId: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318891/where-is-waldo_t6v7zz.jpg",
       },
       {
         difficulty: "hard",
+        imageId: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318888/where-is-waldo3_ixrwbm.jpg",
       },
     ],
   });
