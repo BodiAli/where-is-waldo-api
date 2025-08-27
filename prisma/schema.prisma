@@ -13,6 +13,7 @@ model Illustration {
   difficulty  String       @unique
   Characters  Character[]
   Leaderboard Leaderboard?
+  imageId     String
 }
 
 model Character {
@@ -41,4 +42,11 @@ model Leaderboard {
   User           User[]
   Illustration   Illustration @relation(fields: [illustrationId], references: [id])
   illustrationId String       @unique
+  Score          Int?
+}
+
+model GameSession {
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  endedAt   DateTime?
 }
