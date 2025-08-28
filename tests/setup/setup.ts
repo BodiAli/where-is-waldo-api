@@ -1,8 +1,8 @@
 import { resetTables } from "@prisma/client/sql";
 import prisma from "../../prisma/prismaClient.js";
-import { afterAll } from "vitest";
+import { afterEach } from "vitest";
 
-afterAll(async () => {
+afterEach(async () => {
   await prisma.$queryRawTyped(resetTables());
   await prisma.character.updateMany({
     where: {
