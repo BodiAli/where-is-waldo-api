@@ -31,33 +31,9 @@ export async function getIllustration(req: Request<{ illustrationId: string }>, 
     return;
   }
 
-  if (!req.session.gameSessionId) {
-    const gameSession = await prisma.gameSession.create({
-      data: {},
-    });
-
-    req.session.gameSessionId = gameSession.id;
-  }
+  req.session.startedAt ??= new Date();
 
   res.json({ illustration });
-}
-
-async function areAllCharactersFound(illustrationId: string) {
-  const [total, found] = await Promise.all([
-    prisma.character.count({
-      where: {
-        illustrationId,
-      },
-    }),
-    prisma.character.count({
-      where: {
-        illustrationId,
-        isFound: true,
-      },
-    }),
-  ]);
-
-  return total === found;
 }
 
 async function getCharacterAndPopulateRequest(
@@ -81,6 +57,24 @@ async function getCharacterAndPopulateRequest(
   req.character = character;
 
   next();
+}
+
+async function areAllCharactersFound(illustrationId: string) {
+  const [total, found] = await Promise.all([
+    prisma.character.count({
+      where: {
+        illustrationId,
+      },
+    }),
+    prisma.character.count({
+      where: {
+        illustrationId,
+        isFound: true,
+      },
+    }),
+  ]);
+
+  return total === found;
 }
 
 async function validateCharacterPosition(
@@ -129,29 +123,15 @@ async function validateCharacterPosition(
   return;
 }
 
-async function handleGameWon(req: Request<{ illustrationId: string }>, res: Response, next: NextFunction) {
-  const { gameSessionId } = req.session;
+function handleGameWon(req: Request<{ illustrationId: string }>, res: Response, next: NextFunction) {
+  const { startedAt } = req.session;
 
-  if (!gameSessionId) {
+  if (!startedAt) {
     res.status(400).json({ error: "No active game session" });
     return;
   }
 
   const currentTime = new Date();
-
-  const gameSession = await prisma.gameSession.update({
-    where: {
-      id: gameSessionId,
-    },
-    data: {
-      endedAt: currentTime,
-    },
-  });
-
-  if (!gameSession) {
-    res.json(404).json({ error: "Failed to get current session" });
-    return;
-  }
 
   req.session.destroy((err) => {
     if (err) {
@@ -162,37 +142,23 @@ async function handleGameWon(req: Request<{ illustrationId: string }>, res: Resp
 
   res.status(200).json({
     msg: "Game won",
-    duration: gameSession.endedAt!.getTime() - gameSession.createdAt.getTime(),
-    gameSessionId: gameSessionId,
+    duration: currentTime.getTime() - startedAt.getTime(),
   });
 }
 
 export const validate = [getCharacterAndPopulateRequest, validateCharacterPosition, handleGameWon];
 
 export async function createLeaderboard(
-  req: Request<{ illustrationId: string }, object, { name?: string; gameSessionId: string }>,
+  req: Request<{ illustrationId: string }, object, { name?: string; duration: number }>,
   res: Response
 ) {
   const { illustrationId } = req.params;
-  const { name, gameSessionId } = req.body;
+  const { name, duration } = req.body;
 
   if (!name) {
     res.status(400).json({ error: "Please provide a name" });
     return;
   }
-
-  const gameSession = await prisma.gameSession.findUnique({
-    where: {
-      id: gameSessionId,
-    },
-  });
-
-  if (!gameSession) {
-    res.status(404).json({ error: "Failed to get current session" });
-    return;
-  }
-
-  const duration = gameSession.endedAt!.getTime() - gameSession.createdAt.getTime();
 
   await prisma.leaderboard.update({
     data: {

@@ -10,6 +10,6 @@ declare global {
 
 declare module "express-session" {
   interface SessionData {
-    gameSessionId: string;
+    startedAt: Date;
   }
 }

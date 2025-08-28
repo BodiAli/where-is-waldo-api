@@ -44,9 +44,3 @@ model Leaderboard {
   illustrationId String       @unique
   Score          Int?
 }
-
-model GameSession {
-  id        String    @id @default(uuid())
-  createdAt DateTime  @default(now())
-  endedAt   DateTime?
-}
