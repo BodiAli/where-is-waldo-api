@@ -3,6 +3,7 @@ import cors from "cors";
 import express, { type Request, type Response, type NextFunction } from "express";
 import session from "express-session";
 import illustrationsRouter from "./routes/illustrationsRouter.js";
+import leaderboardsRouter from "./routes/leaderboardsRouter.js";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(
 app.use(express.json());
 
 app.use("/illustrations", illustrationsRouter);
+app.use("/leaderboards", leaderboardsRouter);
 
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Resource not found" });
