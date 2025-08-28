@@ -4,5 +4,6 @@ import * as leaderboardsController from "../controllers/leaderboardsController.j
 const leaderboardsRouter = Router();
 
 leaderboardsRouter.get("/", leaderboardsController.getLeaderboards);
+leaderboardsRouter.get("/:leaderboardId", leaderboardsController.getLeaderboard);
 
 export default leaderboardsRouter;
