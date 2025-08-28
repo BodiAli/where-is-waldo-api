@@ -22,6 +22,9 @@ export async function getIllustration(req: Request<{ illustrationId: string }>, 
           isFound: true,
           name: true,
         },
+        orderBy: {
+          name: "asc",
+        },
       },
     },
   });
@@ -140,9 +143,11 @@ function handleGameWon(req: Request<{ illustrationId: string }>, res: Response, 
     }
   });
 
+  const startedAtDate = new Date(startedAt);
+
   res.status(200).json({
     msg: "Game won",
-    duration: currentTime.getTime() - startedAt.getTime(),
+    duration: currentTime.getTime() - startedAtDate.getTime(),
   });
 }
 
@@ -162,10 +167,10 @@ export async function createLeaderboard(
 
   await prisma.leaderboard.update({
     data: {
-      Score: duration,
       User: {
         create: {
           name,
+          score: duration,
         },
       },
     },
@@ -174,5 +179,5 @@ export async function createLeaderboard(
     },
   });
 
-  res.status(200).json({ msg: `Score created for ${name}` });
+  res.status(201).json({ msg: `Score created for ${name}` });
 }
