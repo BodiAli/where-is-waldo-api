@@ -35,6 +35,7 @@ model User {
   name          String
   Leaderboard   Leaderboard @relation(fields: [leaderboardId], references: [id])
   leaderboardId String
+  score         Int
 }
 
 model Leaderboard {
@@ -42,5 +43,4 @@ model Leaderboard {
   User           User[]
   Illustration   Illustration @relation(fields: [illustrationId], references: [id])
   illustrationId String       @unique
-  Score          Int?
 }
