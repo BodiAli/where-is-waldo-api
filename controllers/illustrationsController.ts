@@ -34,6 +34,15 @@ export async function getIllustration(req: Request<{ illustrationId: string }>, 
     return;
   }
 
+  await prisma.character.updateMany({
+    where: {
+      illustrationId: illustration.id,
+    },
+    data: {
+      isFound: false,
+    },
+  });
+
   req.session.startedAt ??= new Date();
 
   res.json({ illustration });

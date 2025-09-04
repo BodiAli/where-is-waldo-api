@@ -77,6 +77,48 @@ describe("illustrationsRouter routes", () => {
 
         expect(responseBody.error).toBe("Illustration not found");
       });
+
+      it("should update characters isFound to false when a request is initiated", async () => {
+        const mediumIllustration = await prisma.illustration.findUnique({
+          where: {
+            difficulty: "medium",
+          },
+        });
+
+        if (!mediumIllustration) throw new Error("Medium illustration not found");
+
+        const waldoCharacter = await prisma.character.update({
+          where: {
+            name_illustrationId: {
+              name: "Waldo",
+              illustrationId: mediumIllustration.id,
+            },
+          },
+          data: {
+            isFound: true,
+          },
+        });
+
+        if (!waldoCharacter) throw new Error("Waldo character not found");
+
+        await request(app)
+          .get(`/illustrations/${mediumIllustration.id}`)
+          .expect("Content-type", /json/)
+          .expect(200);
+
+        const updatedWaldoCharacter = await prisma.character.findUnique({
+          where: {
+            name_illustrationId: {
+              name: "Waldo",
+              illustrationId: mediumIllustration.id,
+            },
+          },
+        });
+
+        if (!updatedWaldoCharacter) throw new Error("Updated Waldo character not found");
+
+        expect(updatedWaldoCharacter.isFound).toBeFalsy();
+      });
     });
   });
 
