@@ -6,21 +6,21 @@ async function main() {
     prisma.illustration.create({
       data: {
         difficulty: "easy",
-        imageId: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318885/where-is-waldo2_f4wjsb.jpg",
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318885/where-is-waldo2_f4wjsb.jpg",
         Leaderboard: { create: {} },
       },
     }),
     prisma.illustration.create({
       data: {
         difficulty: "medium",
-        imageId: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318891/where-is-waldo_t6v7zz.jpg",
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318891/where-is-waldo_t6v7zz.jpg",
         Leaderboard: { create: {} },
       },
     }),
     prisma.illustration.create({
       data: {
         difficulty: "hard",
-        imageId: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318888/where-is-waldo3_ixrwbm.jpg",
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318888/where-is-waldo3_ixrwbm.jpg",
         Leaderboard: { create: {} },
       },
     }),
@@ -31,6 +31,7 @@ async function main() {
         yStart: WALDO_MEDIUM.yStart,
         xEnd: WALDO_MEDIUM.xEnd,
         yEnd: WALDO_MEDIUM.yEnd,
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/waldo-icon_rwpwns.png",
         Illustration: {
           connect: {
             difficulty: "medium",
@@ -45,6 +46,7 @@ async function main() {
         yStart: WENDA_MEDIUM.yStart,
         xEnd: WENDA_MEDIUM.xEnd,
         yEnd: WENDA_MEDIUM.yEnd,
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287739/wenda-icon_tdlrfl.png",
         Illustration: {
           connect: {
             difficulty: "medium",
@@ -59,6 +61,7 @@ async function main() {
         yStart: WIZARD_MEDIUM.yStart,
         xEnd: WIZARD_MEDIUM.xEnd,
         yEnd: WIZARD_MEDIUM.yEnd,
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/wizard-icon_yxdxkl.png",
         Illustration: {
           connect: {
             difficulty: "medium",
