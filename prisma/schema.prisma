@@ -13,7 +13,7 @@ model Illustration {
   difficulty  String       @unique
   Characters  Character[]
   Leaderboard Leaderboard?
-  imageId     String
+  imageSrc    String
 }
 
 model Character {
@@ -24,6 +24,7 @@ model Character {
   xEnd           Int
   yEnd           Int
   isFound        Boolean      @default(false)
+  imageSrc       String
   Illustration   Illustration @relation(fields: [illustrationId], references: [id])
   illustrationId String
 
