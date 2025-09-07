@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import * as z from "zod";
 import prisma from "../prisma/prismaClient.js";
 
 export async function getIllustrations(_req: Request, res: Response) {
@@ -89,14 +90,30 @@ async function areAllCharactersFound(illustrationId: string) {
   return total === found;
 }
 
+const Positions = z.object({
+  xPosition: z.number("Please provide a valid x position."),
+  yPosition: z.number("Please provide a valid y position."),
+});
+
 async function validateCharacterPosition(
   req: Request<{ illustrationId: string }, object, { xPosition: string; yPosition: string }>,
   res: Response,
   next: NextFunction
 ) {
+  if (!req.body) {
+    res.status(400).json({ error: "Please provide character positions" });
+    return;
+  }
+
   const xPosition = Number.parseInt(req.body.xPosition);
   const yPosition = Number.parseInt(req.body.yPosition);
 
+  const result = Positions.safeParse({ xPosition, yPosition });
+
+  if (!result.success) {
+    res.status(400).json({ error: result.error.issues });
+    return;
+  }
   const character = req.character;
 
   if (
