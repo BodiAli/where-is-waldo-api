@@ -22,6 +22,7 @@ export async function getIllustration(req: Request<{ illustrationId: string }>, 
           illustrationId: true,
           isFound: true,
           name: true,
+          imageSrc: true,
         },
         orderBy: {
           name: "asc",
@@ -124,7 +125,12 @@ async function validateCharacterPosition(
       yPosition <= character.yEnd
     )
   ) {
-    res.status(400).json({ error: "Try again" });
+    res.status(200).json({ msg: "Try again", success: false });
+    return;
+  }
+
+  if (character.isFound) {
+    res.status(409).json({ error: `${character.name} is already found` });
     return;
   }
 
@@ -140,6 +146,7 @@ async function validateCharacterPosition(
       illustrationId: true,
       isFound: true,
       name: true,
+      imageSrc: true,
     },
   });
 
@@ -148,8 +155,9 @@ async function validateCharacterPosition(
     return;
   }
 
-  res.status(200).json({ character: updatedCharacter, msg: `You found ${updatedCharacter.name}` });
-  return;
+  res
+    .status(200)
+    .json({ character: updatedCharacter, msg: `You found ${updatedCharacter.name}`, success: true });
 }
 
 function handleGameWon(req: Request<{ illustrationId: string }>, res: Response, next: NextFunction) {
