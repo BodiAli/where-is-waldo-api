@@ -45,7 +45,7 @@ export async function getIllustration(req: Request<{ illustrationId: string }>, 
     },
   });
 
-  req.session.startedAt ??= new Date();
+  req.session.startedAt = new Date();
 
   res.json({ illustration });
 }
