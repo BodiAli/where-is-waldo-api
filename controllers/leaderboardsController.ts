@@ -24,6 +24,7 @@ export async function getLeaderboard(req: Request<{ leaderboardId: string }>, re
           score: "asc",
         },
       },
+      Illustration: true,
     },
   });
 
