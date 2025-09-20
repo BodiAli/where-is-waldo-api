@@ -199,7 +199,7 @@ export async function createLeaderboard(
     return;
   }
 
-  await prisma.leaderboard.update({
+  const { id: leaderboardId } = await prisma.leaderboard.update({
     data: {
       User: {
         create: {
@@ -213,5 +213,5 @@ export async function createLeaderboard(
     },
   });
 
-  res.status(201).json({ msg: `Score created for ${name}` });
+  res.status(201).json({ leaderboardId });
 }
