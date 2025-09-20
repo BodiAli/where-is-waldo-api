@@ -124,7 +124,7 @@ describe("illustrationsRouter routes", () => {
 
   describe("validate character position", () => {
     describe("given valid character position", () => {
-      it("should return 200 status code and mark character as found and send a success message", async () => {
+      it("should return 200 status code and mark character as found and send message with success flag", async () => {
         const waldo = await prisma.character.findFirst({
           where: {
             name: "Waldo",
@@ -155,7 +155,7 @@ describe("illustrationsRouter routes", () => {
           .expect("Content-type", /json/)
           .expect(200);
 
-        const responseBody = response.body as { character: Character; msg: string };
+        const responseBody = response.body as { character: Character; msg: string; success: boolean };
 
         const updatedWaldo = await prisma.character.findUnique({
           where: { id: waldo.id },
@@ -164,6 +164,7 @@ describe("illustrationsRouter routes", () => {
             illustrationId: true,
             isFound: true,
             name: true,
+            imageSrc: true,
           },
         });
 
@@ -174,11 +175,12 @@ describe("illustrationsRouter routes", () => {
         expect(updatedWaldo.isFound).toBe(true);
         expect(responseBody.character).toEqual({ ...updatedWaldo });
         expect(responseBody.msg).toBe("You found Waldo");
+        expect(responseBody.success).toBeTruthy();
       });
     });
 
     describe("given invalid character position", () => {
-      it("should return 400 status code and a try again message", async () => {
+      it("should return 200 status code and a success false flag", async () => {
         const waldo = await prisma.character.findFirst({
           where: {
             name: "Waldo",
@@ -206,11 +208,12 @@ describe("illustrationsRouter routes", () => {
           .post(`/illustrations/${mediumIllustration.id}/${waldo.id}`)
           .type("json")
           .send({ xPosition: 200, yPosition: 300 })
-          .expect(400);
+          .expect(200);
 
-        const responseBody = response.body as { error: string };
+        const responseBody = response.body as { msg: string; success: boolean };
 
-        expect(responseBody.error).toBe("Try again");
+        expect(responseBody.msg).toBe("Try again");
+        expect(responseBody.success).toBeFalsy();
       });
     });
 
@@ -337,7 +340,7 @@ describe("illustrationsRouter routes", () => {
 
         if (!mediumIllustration) throw new Error("illustration not found");
 
-        await prisma.leaderboard.create({
+        const mediumLeaderboard = await prisma.leaderboard.create({
           data: {
             illustrationId: mediumIllustration.id,
           },
@@ -350,9 +353,9 @@ describe("illustrationsRouter routes", () => {
           .expect("Content-type", /json/)
           .expect(201);
 
-        const responseBody = response.body as { msg: string };
+        const responseBody = response.body as { leaderboardId: string };
 
-        expect(responseBody.msg).toBe("Score created for Bodi");
+        expect(responseBody.leaderboardId).toBe(mediumLeaderboard.id);
 
         const updatedLeaderboard = await prisma.leaderboard.findUnique({
           where: {
