@@ -2,7 +2,11 @@ import type { Request, Response } from "express";
 import prisma from "../prisma/prismaClient.js";
 
 export async function getLeaderboards(_req: Request, res: Response) {
-  const leaderboards = await prisma.leaderboard.findMany();
+  const leaderboards = await prisma.leaderboard.findMany({
+    include: {
+      Illustration: true,
+    },
+  });
 
   res.status(200).json({ leaderboards });
 }
