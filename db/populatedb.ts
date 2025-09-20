@@ -1,5 +1,13 @@
 import prisma from "../prisma/prismaClient.js";
-import { WALDO_MEDIUM, WENDA_MEDIUM, WIZARD_MEDIUM } from "../types/characterTypes.js";
+import {
+  WALDO_MEDIUM,
+  WALDO_EASY,
+  WALDO_HARD,
+  WENDA_MEDIUM,
+  WENDA_HARD,
+  WIZARD_MEDIUM,
+  WIZARD_HARD,
+} from "../types/characterTypes.js";
 
 async function main() {
   await prisma.$transaction([
@@ -65,6 +73,66 @@ async function main() {
         Illustration: {
           connect: {
             difficulty: "medium",
+          },
+        },
+      },
+    }),
+    prisma.character.create({
+      data: {
+        name: "Waldo",
+        xStart: WALDO_EASY.xStart,
+        yStart: WALDO_EASY.yStart,
+        xEnd: WALDO_EASY.xEnd,
+        yEnd: WALDO_EASY.yEnd,
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/waldo-icon_rwpwns.png",
+        Illustration: {
+          connect: {
+            difficulty: "easy",
+          },
+        },
+      },
+    }),
+    prisma.character.create({
+      data: {
+        name: "Waldo",
+        xStart: WALDO_HARD.xStart,
+        yStart: WALDO_HARD.yStart,
+        xEnd: WALDO_HARD.xEnd,
+        yEnd: WALDO_HARD.yEnd,
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/waldo-icon_rwpwns.png",
+        Illustration: {
+          connect: {
+            difficulty: "hard",
+          },
+        },
+      },
+    }),
+    prisma.character.create({
+      data: {
+        name: "Wenda",
+        xStart: WENDA_HARD.xStart,
+        yStart: WENDA_HARD.yStart,
+        xEnd: WENDA_HARD.xEnd,
+        yEnd: WENDA_HARD.yEnd,
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287739/wenda-icon_tdlrfl.png",
+        Illustration: {
+          connect: {
+            difficulty: "hard",
+          },
+        },
+      },
+    }),
+    prisma.character.create({
+      data: {
+        name: "Wizard",
+        xStart: WIZARD_HARD.xStart,
+        yStart: WIZARD_HARD.yStart,
+        xEnd: WIZARD_HARD.xEnd,
+        yEnd: WIZARD_HARD.yEnd,
+        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/wizard-icon_yxdxkl.png",
+        Illustration: {
+          connect: {
+            difficulty: "hard",
           },
         },
       },
