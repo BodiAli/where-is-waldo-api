@@ -41,7 +41,7 @@ model User {
 
 model Leaderboard {
   id             String       @id @default(uuid())
-  User           User[]
+  Users          User[]
   Illustration   Illustration @relation(fields: [illustrationId], references: [id])
   illustrationId String       @unique
 }

@@ -59,7 +59,7 @@ describe("leaderboards router", () => {
                 difficulty: "medium",
               },
             },
-            User: {
+            Users: {
               create: [
                 {
                   name: "Bodi",
@@ -84,12 +84,12 @@ describe("leaderboards router", () => {
           .expect(200);
 
         const { leaderboard: leaderboardResponse } = response.body as {
-          leaderboard: Leaderboard & { User: User[] };
+          leaderboard: Leaderboard & { Users: User[] };
         };
 
-        expect(leaderboardResponse.User[0]!.name).toBe("Joe");
-        expect(leaderboardResponse.User[1]!.name).toBe("Jane");
-        expect(leaderboardResponse.User[2]!.name).toBe("Bodi");
+        expect(leaderboardResponse.Users[0]!.name).toBe("Joe");
+        expect(leaderboardResponse.Users[1]!.name).toBe("Jane");
+        expect(leaderboardResponse.Users[2]!.name).toBe("Bodi");
       });
     });
   });

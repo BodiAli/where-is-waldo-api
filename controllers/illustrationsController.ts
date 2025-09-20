@@ -201,7 +201,7 @@ export async function createLeaderboard(
 
   const { id: leaderboardId } = await prisma.leaderboard.update({
     data: {
-      User: {
+      Users: {
         create: {
           name,
           score: duration,

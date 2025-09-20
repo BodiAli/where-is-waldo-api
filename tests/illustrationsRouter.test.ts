@@ -362,13 +362,13 @@ describe("illustrationsRouter routes", () => {
             illustrationId: mediumIllustration.id,
           },
           include: {
-            User: true,
+            Users: true,
           },
         });
 
         if (!updatedLeaderboard) throw new Error("Leaderboard not found");
 
-        expect(updatedLeaderboard.User).toMatchObject([{ name: "Bodi", score: 2000 }]);
+        expect(updatedLeaderboard.Users).toMatchObject([{ name: "Bodi", score: 2000 }]);
       });
     });
   });

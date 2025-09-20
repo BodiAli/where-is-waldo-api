@@ -19,7 +19,7 @@ export async function getLeaderboard(req: Request<{ leaderboardId: string }>, re
       id: leaderboardId,
     },
     include: {
-      User: {
+      Users: {
         orderBy: {
           score: "asc",
         },
