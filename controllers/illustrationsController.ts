@@ -20,7 +20,6 @@ export async function getIllustration(req: Request<{ illustrationId: string }>, 
         select: {
           id: true,
           illustrationId: true,
-          isFound: true,
           name: true,
           imageSrc: true,
         },
@@ -36,18 +35,14 @@ export async function getIllustration(req: Request<{ illustrationId: string }>, 
     return;
   }
 
-  await prisma.character.updateMany({
-    where: {
-      illustrationId: illustration.id,
-    },
-    data: {
-      isFound: false,
-    },
-  });
-
+  req.session.foundCharacters = [];
   req.session.startedAt = new Date();
 
-  res.json({ illustration });
+  const charactersWithState = illustration.Characters.map((character) => {
+    return { ...character, isFound: req.session.foundCharacters?.includes(character.id) };
+  });
+
+  res.json({ illustration: { ...illustration, Characters: charactersWithState } });
 }
 
 async function getCharacterAndPopulateRequest(
@@ -73,22 +68,14 @@ async function getCharacterAndPopulateRequest(
   next();
 }
 
-async function areAllCharactersFound(illustrationId: string) {
-  const [total, found] = await Promise.all([
-    prisma.character.count({
-      where: {
-        illustrationId,
-      },
-    }),
-    prisma.character.count({
-      where: {
-        illustrationId,
-        isFound: true,
-      },
-    }),
-  ]);
+async function areAllCharactersFound(illustrationId: string, req: Request) {
+  const total = await prisma.character.count({
+    where: {
+      illustrationId,
+    },
+  });
 
-  return total === found;
+  return total === req.session.foundCharacters?.length;
 }
 
 const Positions = z.object({
@@ -117,6 +104,8 @@ async function validateCharacterPosition(
   }
   const character = req.character;
 
+  console.log(req.session);
+
   if (
     !(
       xPosition >= character.xStart &&
@@ -129,28 +118,16 @@ async function validateCharacterPosition(
     return;
   }
 
-  if (character.isFound) {
+  if (req.session.foundCharacters?.includes(character.id)) {
     res.status(409).json({ error: `${character.name} is already found` });
     return;
   }
 
-  const updatedCharacter = await prisma.character.update({
-    data: {
-      isFound: true,
-    },
-    where: {
-      id: character.id,
-    },
-    select: {
-      id: true,
-      illustrationId: true,
-      isFound: true,
-      name: true,
-      imageSrc: true,
-    },
-  });
+  req.session.foundCharacters?.push(character.id);
 
-  if (await areAllCharactersFound(character.illustrationId)) {
+  const updatedCharacter = { ...character, isFound: true };
+
+  if (await areAllCharactersFound(character.illustrationId, req)) {
     next();
     return;
   }

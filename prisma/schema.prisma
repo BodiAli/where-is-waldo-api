@@ -23,7 +23,6 @@ model Character {
   yStart         Int
   xEnd           Int
   yEnd           Int
-  isFound        Boolean      @default(false)
   imageSrc       String
   Illustration   Illustration @relation(fields: [illustrationId], references: [id])
   illustrationId String

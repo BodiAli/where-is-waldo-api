@@ -11,5 +11,6 @@ declare global {
 declare module "express-session" {
   interface SessionData {
     startedAt: Date;
+    foundCharacters: string[];
   }
 }
