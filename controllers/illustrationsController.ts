@@ -122,7 +122,6 @@ async function validateCharacterPosition(
   }
 
   req.session.foundCharacters?.push(character.id);
-  console.log(req.session);
 
   const updatedCharacter = { ...character, isFound: true };
 
