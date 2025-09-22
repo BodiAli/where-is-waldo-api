@@ -11,8 +11,6 @@ export async function getIllustrations(_req: Request, res: Response) {
 export async function getIllustration(req: Request<{ illustrationId: string }>, res: Response) {
   const { illustrationId } = req.params;
 
-  console.log("PROTOCOL", req.protocol);
-
   const illustration = await prisma.illustration.findUnique({
     where: {
       id: illustrationId,
@@ -105,8 +103,6 @@ async function validateCharacterPosition(
     return;
   }
   const character = req.character;
-
-  console.log(req.session);
 
   if (
     !(
