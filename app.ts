@@ -14,7 +14,11 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { httpOnly: true, sameSite: "none", secure: true },
+    cookie: {
+      httpOnly: true,
+      sameSite: process.env["NODE_ENV"] === "production" ? "none" : "lax",
+      secure: process.env["NODE_ENV"] === "production",
+    },
   })
 );
 app.use(
@@ -32,6 +36,8 @@ app.use("/leaderboards", leaderboardsRouter);
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Resource not found" });
 });
+
+console.log(process.env["NODE_ENV"]);
 
 app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(error);
