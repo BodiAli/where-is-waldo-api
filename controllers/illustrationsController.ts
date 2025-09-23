@@ -102,6 +102,7 @@ async function validateCharacterPosition(
     res.status(400).json({ error: result.error.issues });
     return;
   }
+
   const character = req.character;
 
   if (
@@ -123,7 +124,13 @@ async function validateCharacterPosition(
 
   req.session.foundCharacters?.push(character.id);
 
-  const updatedCharacter = { ...character, isFound: true };
+  const updatedCharacter = {
+    id: character.id,
+    illustrationId: character.illustrationId,
+    imageSrc: character.imageSrc,
+    name: character.name,
+    isFound: true,
+  };
 
   if (await areAllCharactersFound(character.illustrationId, req)) {
     next();
@@ -169,7 +176,7 @@ export async function createLeaderboard(
   const { illustrationId } = req.params;
   const { name, duration } = req.body;
 
-  if (!name) {
+  if (!name?.trim()) {
     res.status(400).json({ error: "Please provide a name" });
     return;
   }
