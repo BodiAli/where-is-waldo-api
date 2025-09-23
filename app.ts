@@ -37,8 +37,6 @@ app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Resource not found" });
 });
 
-console.log(process.env["NODE_ENV"]);
-
 app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(error);
   res.status(500).json({ error: error.message ? error.message : error });
