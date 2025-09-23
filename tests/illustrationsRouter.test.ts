@@ -4,7 +4,7 @@ import request from "supertest";
 import type { Character, Illustration } from "@prisma/client";
 import illustrationsRouter from "../routes/illustrationsRouter.js";
 import prisma from "../prisma/prismaClient.js";
-import { WALDO_MEDIUM, WIZARD_MEDIUM } from "../types/characterTypes.js";
+import { WALDO_MEDIUM, WENDA_MEDIUM, WIZARD_MEDIUM } from "../types/characterTypes.js";
 
 const app = express();
 
@@ -78,7 +78,7 @@ describe("illustrationsRouter routes", () => {
         expect(responseBody.error).toBe("Illustration not found");
       });
 
-      it("should update characters isFound to false when a request is initiated", async () => {
+      it("should reinitialize found characters when a request is initiated", async () => {
         const mediumIllustration = await prisma.illustration.findUnique({
           where: {
             difficulty: "medium",
@@ -87,37 +87,44 @@ describe("illustrationsRouter routes", () => {
 
         if (!mediumIllustration) throw new Error("Medium illustration not found");
 
-        const waldoCharacter = await prisma.character.update({
+        const waldo = await prisma.character.findUnique({
           where: {
             name_illustrationId: {
               name: "Waldo",
-              illustrationId: mediumIllustration.id,
+              illustrationId: mediumIllustration?.id,
             },
-          },
-          data: {
-            isFound: true,
           },
         });
 
-        if (!waldoCharacter) throw new Error("Waldo character not found");
+        if (!waldo) throw new Error("Waldo character not found");
 
-        await request(app)
+        await agent.get(`/illustrations/${mediumIllustration.id}`).expect("Content-type", /json/).expect(200);
+
+        const responsePost = await agent
+          .post(`/illustrations/${mediumIllustration.id}/${waldo.id}`)
+          .type("json")
+          .send({ xPosition: WALDO_MEDIUM.xStart, yPosition: WALDO_MEDIUM.yStart })
+          .expect("Content-type", /json/)
+          .expect(200);
+
+        const responseBodyPost = responsePost.body as { success: true; character: { isFound: boolean } };
+        expect(responseBodyPost.success).toBe(true);
+        expect(responseBodyPost.character.isFound).toBeTruthy();
+
+        const responseGet = await agent
           .get(`/illustrations/${mediumIllustration.id}`)
           .expect("Content-type", /json/)
           .expect(200);
 
-        const updatedWaldoCharacter = await prisma.character.findUnique({
-          where: {
-            name_illustrationId: {
-              name: "Waldo",
-              illustrationId: mediumIllustration.id,
-            },
-          },
-        });
+        const responseBodyGet = responseGet.body as {
+          illustration: Illustration & { Characters: (Character & { isFound: boolean })[] };
+        };
 
-        if (!updatedWaldoCharacter) throw new Error("Updated Waldo character not found");
+        const waldoResponse = responseBodyGet.illustration.Characters[0];
 
-        expect(updatedWaldoCharacter.isFound).toBeFalsy();
+        if (!waldoResponse) throw new Error("Waldo response is undefined");
+
+        expect(waldoResponse.isFound).toBeFalsy();
       });
     });
   });
@@ -131,6 +138,12 @@ describe("illustrationsRouter routes", () => {
             Illustration: {
               difficulty: "medium",
             },
+          },
+          omit: {
+            xEnd: true,
+            xStart: true,
+            yEnd: true,
+            yStart: true,
           },
         });
 
@@ -155,25 +168,14 @@ describe("illustrationsRouter routes", () => {
           .expect("Content-type", /json/)
           .expect(200);
 
-        const responseBody = response.body as { character: Character; msg: string; success: boolean };
+        const responseBody = response.body as {
+          character: Character & { isFound: boolean };
+          msg: string;
+          success: boolean;
+        };
 
-        const updatedWaldo = await prisma.character.findUnique({
-          where: { id: waldo.id },
-          select: {
-            id: true,
-            illustrationId: true,
-            isFound: true,
-            name: true,
-            imageSrc: true,
-          },
-        });
-
-        if (!updatedWaldo) {
-          throw new Error("Waldo is not found");
-        }
-
-        expect(updatedWaldo.isFound).toBe(true);
-        expect(responseBody.character).toEqual({ ...updatedWaldo });
+        expect(responseBody.character.isFound).toBeTruthy();
+        expect(responseBody.character).toMatchObject({ ...waldo });
         expect(responseBody.msg).toBe("You found Waldo");
         expect(responseBody.success).toBeTruthy();
       });
@@ -229,14 +231,18 @@ describe("illustrationsRouter routes", () => {
           throw new Error("Medium illustration not found");
         }
 
-        await prisma.character.updateMany({
-          data: {
-            isFound: true,
-          },
+        const waldo = await prisma.character.findFirst({
           where: {
-            name: {
-              in: ["Wenda", "Waldo"],
+            name: "Waldo",
+            Illustration: {
+              difficulty: "medium",
             },
+          },
+        });
+
+        const wenda = await prisma.character.findFirst({
+          where: {
+            name: "Wenda",
             Illustration: {
               difficulty: "medium",
             },
@@ -252,9 +258,25 @@ describe("illustrationsRouter routes", () => {
           },
         });
 
-        if (!wizard) {
-          throw new Error("Wizard is not found");
+        if (!wizard || !wenda || !waldo) {
+          throw new Error("Character not found");
         }
+
+        await agent.get(`/illustrations/${mediumIllustration.id}`).expect("Content-type", /json/).expect(200);
+
+        await agent
+          .post(`/illustrations/${mediumIllustration.id}/${waldo.id}`)
+          .type("json")
+          .send({ xPosition: WALDO_MEDIUM.xStart, yPosition: WALDO_MEDIUM.yStart })
+          .expect("Content-type", /json/)
+          .expect(200);
+
+        await agent
+          .post(`/illustrations/${mediumIllustration.id}/${wenda.id}`)
+          .type("json")
+          .send({ xPosition: WENDA_MEDIUM.xStart, yPosition: WENDA_MEDIUM.yStart })
+          .expect("Content-type", /json/)
+          .expect(200);
 
         const response = await agent
           .post(`/illustrations/${mediumIllustration.id}/${wizard.id}`)
@@ -285,16 +307,20 @@ describe("illustrationsRouter routes", () => {
 
         await agent.get(`/illustrations/${mediumIllustration.id}`).expect(200);
 
-        await prisma.character.updateMany({
-          data: {
-            isFound: true,
-          },
+        const waldo = await prisma.character.findUnique({
           where: {
-            name: {
-              in: ["Wenda", "Waldo"],
+            name_illustrationId: {
+              name: "Waldo",
+              illustrationId: mediumIllustration.id,
             },
-            Illustration: {
-              difficulty: "medium",
+          },
+        });
+
+        const wenda = await prisma.character.findUnique({
+          where: {
+            name_illustrationId: {
+              name: "Wenda",
+              illustrationId: mediumIllustration.id,
             },
           },
         });
@@ -302,15 +328,29 @@ describe("illustrationsRouter routes", () => {
         const wizard = await prisma.character.findUnique({
           where: {
             name_illustrationId: {
-              illustrationId: mediumIllustration.id,
               name: "Wizard",
+              illustrationId: mediumIllustration.id,
             },
           },
         });
 
-        if (!wizard) {
-          throw new Error("Wizard not found");
+        if (!wizard || !waldo || !wenda) {
+          throw new Error("Character not found");
         }
+
+        await agent
+          .post(`/illustrations/${mediumIllustration.id}/${waldo.id}`)
+          .type("json")
+          .send({ xPosition: waldo.xStart, yPosition: waldo.yStart })
+          .expect("Content-type", /json/)
+          .expect(200);
+
+        await agent
+          .post(`/illustrations/${mediumIllustration.id}/${wenda.id}`)
+          .type("json")
+          .send({ xPosition: wenda.xStart, yPosition: wenda.yStart })
+          .expect("Content-type", /json/)
+          .expect(200);
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
 

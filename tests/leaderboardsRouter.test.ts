@@ -11,7 +11,7 @@ app.use("/leaderboards", leaderboardsRouter);
 describe("leaderboards router", () => {
   describe("get all leaderboards", () => {
     describe("given GET request to /leaderboards", () => {
-      it("should 200 status code and return all leaderboards", async () => {
+      it("should return 200 status code and return all leaderboards", async () => {
         await prisma.leaderboard.create({
           data: {
             Illustration: {

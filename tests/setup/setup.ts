@@ -4,12 +4,4 @@ import { afterEach } from "vitest";
 
 afterEach(async () => {
   await prisma.$queryRawTyped(resetTables());
-  await prisma.character.updateMany({
-    where: {
-      isFound: true,
-    },
-    data: {
-      isFound: false,
-    },
-  });
 });
