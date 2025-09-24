@@ -18,7 +18,6 @@ app.use(
       httpOnly: true,
       sameSite: process.env["NODE_ENV"] === "production" ? "none" : "lax",
       secure: process.env["NODE_ENV"] === "production",
-      domain: process.env.CLIENT_URL,
     },
   })
 );
