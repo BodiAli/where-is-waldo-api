@@ -30,6 +30,5 @@ declare namespace NodeJS {
     WIZARD_HARD_Y_END: string;
     SESSION_SECRET: string;
     CLIENT_URL: string;
-    DOMAIN: string;
   }
 }
