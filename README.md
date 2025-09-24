@@ -1,4 +1,4 @@
-# For best experience use Chrome or firefox
+# For best experience use Chrome or Firefox
 
 This app uses cross site cookies to share httpOnly data sent by the server.
 Safari's privacy settings by default enables "Prevent cross site tracking" which does not store the session cookie
