@@ -14,21 +14,21 @@ async function main() {
     prisma.illustration.create({
       data: {
         difficulty: "easy",
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318885/where-is-waldo2_f4wjsb.jpg",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1756318885/where-is-waldo2_f4wjsb.jpg",
         Leaderboard: { create: {} },
       },
     }),
     prisma.illustration.create({
       data: {
         difficulty: "medium",
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318891/where-is-waldo_t6v7zz.jpg",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1756318891/where-is-waldo_t6v7zz.jpg",
         Leaderboard: { create: {} },
       },
     }),
     prisma.illustration.create({
       data: {
         difficulty: "hard",
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1756318888/where-is-waldo3_ixrwbm.jpg",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1756318888/where-is-waldo3_ixrwbm.jpg",
         Leaderboard: { create: {} },
       },
     }),
@@ -39,7 +39,7 @@ async function main() {
         yStart: WALDO_MEDIUM.yStart,
         xEnd: WALDO_MEDIUM.xEnd,
         yEnd: WALDO_MEDIUM.yEnd,
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/waldo-icon_rwpwns.png",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1757287738/waldo-icon_rwpwns.png",
         Illustration: {
           connect: {
             difficulty: "medium",
@@ -54,7 +54,7 @@ async function main() {
         yStart: WENDA_MEDIUM.yStart,
         xEnd: WENDA_MEDIUM.xEnd,
         yEnd: WENDA_MEDIUM.yEnd,
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287739/wenda-icon_tdlrfl.png",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1757287739/wenda-icon_tdlrfl.png",
         Illustration: {
           connect: {
             difficulty: "medium",
@@ -69,7 +69,7 @@ async function main() {
         yStart: WIZARD_MEDIUM.yStart,
         xEnd: WIZARD_MEDIUM.xEnd,
         yEnd: WIZARD_MEDIUM.yEnd,
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/wizard-icon_yxdxkl.png",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1757287738/wizard-icon_yxdxkl.png",
         Illustration: {
           connect: {
             difficulty: "medium",
@@ -84,7 +84,7 @@ async function main() {
         yStart: WALDO_EASY.yStart,
         xEnd: WALDO_EASY.xEnd,
         yEnd: WALDO_EASY.yEnd,
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/waldo-icon_rwpwns.png",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1757287738/waldo-icon_rwpwns.png",
         Illustration: {
           connect: {
             difficulty: "easy",
@@ -99,7 +99,7 @@ async function main() {
         yStart: WALDO_HARD.yStart,
         xEnd: WALDO_HARD.xEnd,
         yEnd: WALDO_HARD.yEnd,
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/waldo-icon_rwpwns.png",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1757287738/waldo-icon_rwpwns.png",
         Illustration: {
           connect: {
             difficulty: "hard",
@@ -114,7 +114,7 @@ async function main() {
         yStart: WENDA_HARD.yStart,
         xEnd: WENDA_HARD.xEnd,
         yEnd: WENDA_HARD.yEnd,
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287739/wenda-icon_tdlrfl.png",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1757287739/wenda-icon_tdlrfl.png",
         Illustration: {
           connect: {
             difficulty: "hard",
@@ -129,7 +129,7 @@ async function main() {
         yStart: WIZARD_HARD.yStart,
         xEnd: WIZARD_HARD.xEnd,
         yEnd: WIZARD_HARD.yEnd,
-        imageSrc: "https://res.cloudinary.com/dgfglascb/image/upload/v1757287738/wizard-icon_yxdxkl.png",
+        imageSrc: "https://res.cloudinary.com/bodimahdi/image/upload/v1757287738/wizard-icon_yxdxkl.png",
         Illustration: {
           connect: {
             difficulty: "hard",
